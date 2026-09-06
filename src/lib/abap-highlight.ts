@@ -1,0 +1,233 @@
+const KEYWORDS = new Set(
+  [
+    "REPORT",
+    "TABLES",
+    "TYPE-POOLS",
+    "TYPES",
+    "TYPE",
+    "DATA",
+    "CONSTANTS",
+    "FIELD-SYMBOLS",
+    "PARAMETERS",
+    "SELECT-OPTIONS",
+    "SELECTION-SCREEN",
+    "BEGIN",
+    "END",
+    "OF",
+    "BLOCK",
+    "SCREEN",
+    "TABBED",
+    "TAB",
+    "SUBSCREEN",
+    "FRAME",
+    "TITLE",
+    "WITH",
+    "COMMENT",
+    "FUNCTION",
+    "KEY",
+    "AS",
+    "CHECKBOX",
+    "RADIOBUTTON",
+    "GROUP",
+    "USER-COMMAND",
+    "DEFAULT",
+    "OBLIGATORY",
+    "MATCHCODE",
+    "OBJECT",
+    "MODIF",
+    "ID",
+    "NO-DISPLAY",
+    "LIKE",
+    "REF",
+    "TO",
+    "STANDARD",
+    "SORTED",
+    "HASHED",
+    "TABLE",
+    "EMPTY",
+    "UNIQUE",
+    "NON-UNIQUE",
+    "KEY",
+    "INDEX",
+    "RANGE",
+    "CLASS",
+    "DEFINITION",
+    "IMPLEMENTATION",
+    "ENDCLASS",
+    "PUBLIC",
+    "PRIVATE",
+    "PROTECTED",
+    "SECTION",
+    "FINAL",
+    "METHODS",
+    "CLASS-METHODS",
+    "METHOD",
+    "ENDMETHOD",
+    "FOR",
+    "EVENT",
+    "IMPORTING",
+    "EXPORTING",
+    "CHANGING",
+    "RETURNING",
+    "RAISING",
+    "EXCEPTIONS",
+    "OTHERS",
+    "VALUE",
+    "OPTIONAL",
+    "FORM",
+    "ENDFORM",
+    "PERFORM",
+    "USING",
+    "IF",
+    "ELSEIF",
+    "ELSE",
+    "ENDIF",
+    "CASE",
+    "WHEN",
+    "ENDCASE",
+    "LOOP",
+    "AT",
+    "INTO",
+    "ASSIGNING",
+    "WHERE",
+    "ENDLOOP",
+    "DO",
+    "ENDDO",
+    "WHILE",
+    "ENDWHILE",
+    "CHECK",
+    "EXIT",
+    "CONTINUE",
+    "RETURN",
+    "SELECT",
+    "FROM",
+    "INNER",
+    "LEFT",
+    "OUTER",
+    "JOIN",
+    "ON",
+    "AND",
+    "OR",
+    "NOT",
+    "IN",
+    "EQ",
+    "NE",
+    "GT",
+    "LT",
+    "GE",
+    "LE",
+    "IS",
+    "INITIAL",
+    "ASSIGNED",
+    "BOUND",
+    "REQUESTED",
+    "ALL",
+    "ENTRIES",
+    "UP",
+    "ROWS",
+    "DISTINCT",
+    "ORDER",
+    "BY",
+    "CORRESPONDING",
+    "FIELDS",
+    "APPEND",
+    "INSERT",
+    "MODIFY",
+    "DELETE",
+    "READ",
+    "SORT",
+    "CLEAR",
+    "REFRESH",
+    "FREE",
+    "MOVE-CORRESPONDING",
+    "ADD",
+    "CALL",
+    "TRANSACTION",
+    "MESSAGE",
+    "DISPLAY",
+    "AUTHORITY-CHECK",
+    "SET",
+    "HANDLER",
+    "PARAMETER",
+    "FIELD",
+    "TRY",
+    "CATCH",
+    "ENDTRY",
+    "RAISE",
+    "NEW",
+    "CREATE",
+    "CONDENSE",
+    "REPLACE",
+    "OCCURRENCES",
+    "CONCATENATE",
+    "RESPECTING",
+    "BLANKS",
+    "SHIFT",
+    "COND",
+    "CONV",
+    "BOOLC",
+    "LINES",
+    "SPACE",
+    "ABAP_TRUE",
+    "ABAP_FALSE",
+    "INITIALIZATION",
+    "START-OF-SELECTION",
+    "END-OF-SELECTION",
+    "AT",
+    "SELECTION-SCREEN",
+    "OUTPUT",
+    "VALUE-REQUEST",
+    "LOAD-OF-PROGRAM",
+    "INCLUDE",
+    "WRITE",
+    "SKIP",
+    "ULINE",
+    "FORMAT",
+    "CONSTANTS",
+    "STATICS",
+    "RISK",
+  ].map((k) => k.toUpperCase()),
+);
+
+export type Seg = { t: string; k: "cmt" | "str" | "kw" | "fn" | "num" | "plain" };
+
+export function highlightLine(line: string): Seg[] {
+  const trimmed = line.trimStart();
+  if (trimmed.startsWith("*") || trimmed.startsWith('"')) {
+    return [{ t: line, k: "cmt" }];
+  }
+  const segs: Seg[] = [];
+  const re =
+    /('(?:''|[^'])*')|("[^"]*")|(\b\d+\b)|(\b[A-Za-z_][A-Za-z0-9_]*(-[A-Za-z0-9_]+)*\b)|(\S+)|(\s+)/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(line))) {
+    const [raw, str1, str2, num, ident] = m;
+    if (str1 || str2) segs.push({ t: raw, k: "str" });
+    else if (num) segs.push({ t: raw, k: "num" });
+    else if (ident) {
+      const u = ident.toUpperCase();
+      if (KEYWORDS.has(u)) segs.push({ t: raw, k: "kw" });
+      else if (line.slice(m.index + ident.length).match(/^\s*\(/)) segs.push({ t: raw, k: "fn" });
+      else segs.push({ t: raw, k: "plain" });
+    } else segs.push({ t: raw, k: "plain" });
+  }
+  return segs.length ? segs : [{ t: line, k: "plain" }];
+}
+
+export function parseSections(src: string): { id: string; title: string; start: number }[] {
+  const lines = src.split("\n");
+  const out: { id: string; title: string; start: number }[] = [
+    { id: "top", title: "Header / types", start: 0 },
+  ];
+  lines.forEach((ln, i) => {
+    const form = ln.match(/^\s*FORM\s+(\S+)/i);
+    const sel = ln.match(/^\*--- Tab\s+\d+:\s*(.+?)\s*-+/);
+    const ev = ln.match(/^\*-\{0,}\s{0,}(\*.*)?(Initialization|Main|F4)/i);
+    if (form) out.push({ id: `f-${form[1]}`, title: `FORM ${form[1]}`, start: i });
+    else if (sel) out.push({ id: `t-${i}`, title: sel[1].trim(), start: i });
+    else if (/SELECTION-SCREEN BEGIN OF TABBED/i.test(ln))
+      out.push({ id: "sel", title: "Selection screen", start: i });
+    else if (ev) out.push({ id: `e-${i}`, title: ev[2], start: i });
+  });
+  return out;
+}

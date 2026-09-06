@@ -1,0 +1,36 @@
+{
+  "url": "http://127.0.0.1:8080/",
+  "viewports": {
+    "desktop": {
+      "width": 1280,
+      "height": 800,
+      "status": 200,
+      "title": "ZMM Master",
+      "hasCanvas": false,
+      "bodyTextLen": 1467,
+      "bodyTextHash": "0f670d07a8e5ad21ab1b0ac292e7f21b14748c3bb1c1cadb09ecd1aa7b9437cd",
+      "bodyTextPrefix": "ZMM Material Master Report ZMM_MAT_MASTER_RPT Comprehensive MM60",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview.png"
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844,
+      "status": 200,
+      "title": "ZMM Master",
+      "hasCanvas": false,
+      "bodyTextLen": 1440,
+      "bodyTextHash": "2e106a341eed12c7ed5c12caf815122a3e85e63ce3517a613084bef2da7c8916",
+      "bodyTextPrefix": "ZMM Material Master Report Comprehensive MM60 replacement · ECC ",
+      "horizontalOverflow": false,
+      "consoleErrors": [],
+      "pageErrors": [],
+      "screenshot": "/workspace/screenshots/app-builder-preview-mobile.png"
+    }
+  },
+  "brandWarnings": [],
+  "authWarnings": [],
+  "verdictFile": "/workspace/screenshots/app-builder-preview.json"
+}

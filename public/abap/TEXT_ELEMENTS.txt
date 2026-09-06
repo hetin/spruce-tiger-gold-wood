@@ -1,0 +1,86 @@
+ZMM_MAT_MASTER_RPT — Text Elements
+===================================
+After pasting the program in SE38 / SE80:
+
+1) Goto → Text Elements → Selection Texts  (or run the program once:
+   INITIALIZATION already fills selection labels via %_..._%_APP_%-TEXT)
+
+2) Goto → Text Elements → Text Symbols
+   Click "Compare Text Symbols from Program" then Save/Activate.
+
+   If compare is empty, create these symbols manually:
+
+   001  Comprehensive Material Master Report
+   002  Double-click material to open MM03
+   003  Rows selected
+   004  Rows skipped (authorization)
+   005  Text read errors (ignored)
+
+Selection texts (auto-filled at runtime, optional to persist):
+
+   S_MATNR  Material
+   S_MTART  Material Type
+   S_MATKL  Material Group
+   S_MBRSH  Industry Sector
+   S_ERSDA  Created On
+   S_ERNAM  Created By
+   S_LAEDA  Last Change
+   S_AENAM  Changed By
+   S_MSTAE  X-Plant Status
+   S_SPART  Division
+   S_PRDHA  Product Hierarchy
+   S_EXTWG  Ext. Material Group
+   S_MEINS  Base UoM
+   S_EAN11  EAN/UPC
+   S_BWTTY  Valuation Category
+   S_WERKS  Plant
+   S_LGORT  Storage Location
+   S_MMSTA  Plant Status
+   S_EKGRP  Purch. Group
+   S_DISPO  MRP Controller
+   S_DISMM  MRP Type
+   S_BESKZ  Procurement Type
+   S_SOBSL  Spec. Procurement
+   S_DISLS  Lot Size Key
+   S_MAABC  ABC Indicator
+   S_PRCTR  Profit Center
+   S_STRGR  Strategy Group
+   S_FEVOR  Prod. Supervisor
+   S_LGPRO  Issue Storage Loc.
+   S_BWKEY  Valuation Area
+   S_BKLAS  Valuation Class
+   S_BWTAR  Valuation Type
+   S_VPRSV  Price Control
+   S_VKORG  Sales Organization
+   S_VTWEG  Distribution Channel
+   S_KTGRM  Acct Assn Group
+   S_VMSTA  Sales Status
+   S_DWERK  Delivering Plant
+   S_VRKME  Sales Unit
+   P_BASIC  Material level
+   P_PLANT  Plant level
+   P_STOR   Storage loc. level
+   P_VALU   Valuation level
+   P_SALES  Sales area level
+   P_FULL   Plant + Acct + Sales
+   P_MRP    MRP / Planning columns
+   P_ACCT   Accounting / Valuation columns
+   P_PUR    Purchasing columns
+   P_SLS    Sales columns
+   P_WH     Warehouse / SLoc columns
+   P_QM     Quality columns
+   P_STK    Stock columns (MB52-like)
+   P_POTXT  Material PO text (BEST)
+   P_SOTXT  Material SO text (MVKE/0001)
+   P_BSTXT  Basic text (GRUN)
+   P_DEFLG  Fallback SO text language D
+   P_LANGU  Language
+   P_MAX    Maximum hits
+   P_VARI   Layout variant
+   P_DEL    Include deletion flags
+   P_AUTH   Check plant authorization
+   P_ALV    Display ALV
+   P_CSV    Download CSV
+
+List heading: Comprehensive Material Master Report
+Title:       Material Master Report (ZMM)
